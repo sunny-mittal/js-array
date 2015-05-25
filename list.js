@@ -58,6 +58,7 @@ function link(a, b) {
   try {
     a.next = b;
   } catch (e) {
+    console.log('a is null');
     this.head = b;
   }
   try {
@@ -228,7 +229,19 @@ List.prototype.reduceRight = function(callback, initial) {
 }
 
 List.prototype.reverse = function() {
-    
+  var holder = new ListNode(null);
+  var tail = holder.next = this.tail;
+  while (tail) {
+    tail.next = tail.prev;
+    tail = tail.next;
+  }
+  var head = this.head = holder.next;
+  while(head) {
+    link.call(this, head, head.next);
+    head = head.next;
+  }
+  this.head.prev = null;
+  return this;
 }
 
 List.prototype.shift = function() {
