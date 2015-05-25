@@ -334,20 +334,4 @@ List.prototype.values = function() {
   return new ListIterator(this, 'v');
 }
 
-List.prototype.nexts = function() {
-  var head = this.head;
-  while(head) {
-    console.log(head.value);
-    head = head.next;
-  }
-}
-
-List.prototype.prevs = function() {
-  var tail = this.tail;
-  while(tail) {
-    console.log(tail.value);
-    tail = tail.prev;
-  }
-}
-
 module.exports = List;
