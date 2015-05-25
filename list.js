@@ -28,7 +28,7 @@ List.prototype.copyWithin = function(target, start, end) {
 };
 
 List.prototype.entries = function() {
-    
+  return new ListIterator(this, 'e');
 };
 
 List.prototype.every = function(callback, context) {
@@ -47,19 +47,31 @@ List.prototype.filter = function(callback, context) {
 };
 
 List.prototype.find = function(callback, context) {
-    
+  for (var i = 0, node = this.head; i < this.length; i++, node = node.next) {
+    if (context ? callback.call(context, node.value, i, this) : callback(node.value, i, this)) return node.value;
+  }
+  return undefined;
 };
 
 List.prototype.findIndex = function(callback, context) {
-    
+  for (var i = 0, node = this.head; i < this.length; i++, node = node.next) {
+    if (context ? callback.call(context, node.value, i, this) : callback(node.value, i, this)) return i;
+  }
+  return -1;  
 };
 
 List.prototype.forEach = function(callback, context) {
-    
+  for (var i = 0, node = this.head; i < this.length; i++, node = node.next) {
+    context ? callback.call(context, node.value, i, this) : callback(node.value, i, this);
+  }  
 };
 
 List.prototype.includes = function(search, from) {
-
+  var i = from || 0;
+  for (var node = this.head; i < this.length; i++, node = node.next) {
+    if (node.value === search) return true;
+  }
+  return false;
 };
 
 List.prototype.indexOf = function(search, from) {
@@ -71,7 +83,7 @@ List.prototype.join = function(separator) {
 };
 
 List.prototype.keys = function() {
-    
+  return new ListIterator(this, 'k');
 };
 
 List.prototype.lastIndexOf = function(search, from) {
@@ -168,7 +180,18 @@ List.prototype.shift = function() {
 };
 
 List.prototype.slice = function(begin, end) {
-    
+  var newList = new List(), node = this.head;
+  if (begin === undefined) return this;
+  else begin = begin >= 0 ? begin : this.length + begin;
+  if (end === undefined) end = this.length;
+  else end = end >= 0 ? end : this.length + end;
+  if (begin >= 0 && begin < this.length) {
+    for (var i = 0; i < begin; i++, node = node.next) {}
+    for (var i = 0, len = end - begin; i < len; i++, node = node.next) {
+      newList.push(node.value);
+    }
+  }
+  return newList;
 };
 
 List.prototype.some = function(callback, context) {
@@ -183,7 +206,7 @@ List.prototype.sort = function(compareFn) {
 };
 
 List.prototype.splice = function(start, deleteCount, element) {
-    
+
 };
 
 List.prototype.toString = function() {
@@ -204,7 +227,7 @@ List.prototype.unshift = function(element) {
 };
 
 List.prototype.values = function() {
-    
+  return new ListIterator(this, 'v');
 };
 
 module.exports = List;
