@@ -14,7 +14,9 @@ function List() {
 }
 
 List.prototype.at = function(position) {
-    
+  if (position >= this.length) return undefined;
+  for (var i = 0, node = this.head; i < position; i++, node = node.next) {}
+  return node.value;
 };
 
 List.prototype.concat = function(element) {
@@ -84,8 +86,9 @@ List.prototype.map = function(callback, context) {
 List.prototype.pop = function() {
   if (this.length) {
     var node = this.tail;
-    this.tail = this.tail.prev;
+    this.tail = node.prev;
     this.length--;
+    if (this.length === 0) this.head = this.tail = null;
     return node.value;
   } else {
     return undefined;
@@ -121,8 +124,16 @@ List.prototype.reverse = function() {
     
 };
 
-List.prototype.shift = function(elts) {
-
+List.prototype.shift = function() {
+  if (this.length) {
+    var node = this.head;
+    this.head = node.next;
+    this.length--;
+    if (this.length === 0) this.tail = this.head = null;
+    return node.value;
+  } else {
+    return undefined;
+  }
 };
 
 List.prototype.slice = function(begin, end) {
@@ -151,7 +162,11 @@ List.prototype.toString = function() {
 };
 
 List.prototype.unshift = function(element) {
-    
+    var node = new ListNode(element);
+    node.next = this.head;
+    this.head = node;
+    this.length++;
+    return this;
 };
 
 List.prototype.values = function() {
