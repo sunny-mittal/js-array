@@ -76,7 +76,7 @@ List.prototype.lastIndexOf = function(search, from) {
 List.prototype.map = function(callback, context) {
   var newList = new List();
   for (var i = 0, node = this.head; i < this.length; i++, node = node.next) {
-    newList.push(callback(node.value, i, this));
+    newList.push(context ? callback.call(context, node.value, i, this) : callback(node.value, i, this));
   };
   return newList;  
 };
