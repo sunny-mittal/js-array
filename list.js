@@ -74,7 +74,11 @@ List.prototype.lastIndexOf = function(search, from) {
 };
 
 List.prototype.map = function(callback, context) {
-    
+  var newList = new List();
+  for (var i = 0, node = this.head; i < this.length; i++, node = node.next) {
+    newList.push(callback(node.value, i, this));
+  };
+  return newList;  
 };
 
 List.prototype.pop = function() {
@@ -138,7 +142,12 @@ List.prototype.splice = function(start, deleteCount, element) {
 };
 
 List.prototype.toString = function() {
-    
+  var str = '';
+  for (var i = 0, node = this.head; i < this.length; i++, node = node.next) {
+    str += node.value;
+    if (i !== this.length - 1) str += ',';
+  };
+  return str;
 };
 
 List.prototype.unshift = function(element) {
