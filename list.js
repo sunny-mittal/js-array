@@ -1,15 +1,48 @@
-function ListNode(value) {
-  this.value = value;
-  this.prev = null;
-  this.next = null;
+var ListNode = function(value) {
+  Object.defineProperties(this, {
+    'value': { value: value },
+    'prev': { value: null, writable: true },
+    'next': { value: null, writable: true }
+  });
 }
 
-function List() {
-  this.length = 0;
-  this.head = null;
-  this.tail = null;
+var List = function() {
+  Object.defineProperties(this, {
+    'length': { value: 0, writable: true },
+    'head': { value: null, writable: true },
+    'tail': { value: null, writable: true }
+  });
   for (var arg of arguments) {
     this.push(arg);
+  }
+}
+
+var ListIterator = function(list, type) {
+  var pos = -1, done = false;
+  return {
+    next: function() {
+      if (!done) {
+        pos++;
+        done = pos === list.length;
+      }
+      switch(type) {
+        case 'e':
+          return {
+            value: new List(pos, list.at(pos)),
+            done: done
+          };
+        case 'k':
+          return {
+            value: pos,
+            done: done
+          };
+        case 'v':
+          return {
+            value: list.at(pos),
+            done: done
+          };
+      }
+    }
   }
 }
 
@@ -316,9 +349,5 @@ List.prototype.prevs = function() {
     tail = tail.prev;
   }
 }
-
-var l = new List();
-l.push(1, 2, 3, 4, 5);
-l.splice(1, 0, 2, 3);
 
 module.exports = List;
