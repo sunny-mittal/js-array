@@ -141,11 +141,23 @@ List.prototype.includes = function(search, from) {
 }
 
 List.prototype.indexOf = function(search, from) {
-    
+  from = from || 0;
+  from = from >= 0 ? from : this.length + from;
+  for (var i = from, node = seekList(this, from); i < this.length; i++, node = node.next) {
+    if (node.value === search) return i;
+  }
+  return -1;
 }
 
 List.prototype.join = function(separator) {
-    
+  var str = '';
+  var head = this.head;
+  while(head) {
+    str += head.value;
+    if(head.next) str += separator;
+    head = head.next;
+  }
+  return str;
 }
 
 List.prototype.keys = function() {
@@ -153,7 +165,12 @@ List.prototype.keys = function() {
 }
 
 List.prototype.lastIndexOf = function(search, from) {
-    
+  from = from || 0;
+  from = from >= 0 ? from : this.length + from;
+  for (var i = this.length - 1, node = this.tail; i >= from; i--, node = node.prev) {
+    if (node.value === search) return i;
+  }
+  return -1;
 }
 
 List.prototype.map = function(callback, context) {
