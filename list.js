@@ -3,19 +3,19 @@ var strArr = F.lorem.sentences(1000).split(' ');
 
 var ListNode = function(value) {
   Object.defineProperties(this, {
-    'value': { value: value },
-    'prev': { value: null, writable: true },
-    'next': { value: null, writable: true }
+    'value': {value: value},
+    'prev': {value: null, writable: true},
+    'next': {value: null, writable: true}
   });
 }
 
 var List = function() {
   Object.defineProperties(this, {
-    'length': { value: 0, writable: true },
-    'head': { value: null, writable: true },
-    'tail': { value: null, writable: true }
+    'length': {value: 0, writable: true},
+    'head': {value: null, writable: true},
+    'tail': {value: null, writable: true}
   });
-  if (arguments.length) this.push(arguments);
+  for (var arg of arguments) this.push(arg);
 }
 
 var ListIterator = function(list, type) {
@@ -26,7 +26,7 @@ var ListIterator = function(list, type) {
         pos++;
         done = pos === list.length;
       }
-      switch(type) {
+      switch (type) {
         case 'e':
           return {
             value: new List(pos, list.at(pos)),
@@ -59,7 +59,6 @@ function link(a, b) {
   try {
     a.next = b;
   } catch (e) {
-    console.log('a is null');
     this.head = b;
   }
   try {
@@ -86,8 +85,18 @@ List.prototype.at = function(position) {
   return node.value;
 }
 
-List.prototype.concat = function(element) {
-    
+List.prototype.concat = function() {
+  for (var arg of arguments) {
+    if (arg.constructor === L && arg.length) {
+      if (!this.length) this.head = arg.head;
+      link.call(this, this.tail, arg.head);
+      this.tail = arg.tail;
+      this.length += arg.length;
+    } else {
+      this.push(arg);
+    }
+  }
+  return this;
 }
 
 List.prototype.copyWithin = function(target, start, end) {
@@ -153,9 +162,9 @@ List.prototype.indexOf = function(search, from) {
 List.prototype.join = function(separator) {
   var str = '';
   var head = this.head;
-  while(head) {
+  while (head) {
     str += head.value;
-    if(head.next) str += separator;
+    if (head.next) str += separator;
     head = head.next;
   }
   return str;
@@ -199,7 +208,7 @@ List.prototype.push = function() {
     this.length++;
     var node = new ListNode(arg);
     if (this.head) {
-      link(this.tail, node);
+      link.call(this, this.tail, node);
       this.tail = node;
     } else {
       this.head = this.tail = node;
@@ -252,7 +261,7 @@ List.prototype.reverse = function() {
     tail = tail.next;
   }
   var head = this.head = holder.next;
-  while(head) {
+  while (head) {
     link.call(this, head, head.next);
     head = head.next;
   }
