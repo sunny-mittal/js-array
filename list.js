@@ -1,3 +1,6 @@
+var F = require('faker');
+var strArr = F.lorem.sentences(1000).split(' ');
+
 var ListNode = function(value) {
   Object.defineProperties(this, {
     'value': { value: value },
@@ -12,9 +15,7 @@ var List = function() {
     'head': { value: null, writable: true },
     'tail': { value: null, writable: true }
   });
-  for (var arg of arguments) {
-    this.push(arg);
-  }
+  if (arguments.length) this.push(arguments);
 }
 
 var ListIterator = function(list, type) {
@@ -193,18 +194,16 @@ List.prototype.pop = function() {
   }
 }
 
-List.prototype.push = function(element) {
-  if (arguments.length === 1) {
-    var node = new ListNode(element);
+List.prototype.push = function() {
+  for (var arg of arguments) {
+    this.length++;
+    var node = new ListNode(arg);
     if (this.head) {
       link(this.tail, node);
       this.tail = node;
     } else {
       this.head = this.tail = node;
     }
-    this.length++;        
-  } else {
-    for (var arg of arguments) this.push(arg);
   }
   return this.length;
 }
